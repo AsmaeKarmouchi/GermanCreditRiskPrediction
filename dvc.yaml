@@ -1,0 +1,27 @@
+stages:
+  download:
+    cmd: python3 src/data/download.py
+    outs:
+      - data/raw/GermanCredit.csv
+
+  preprocess:
+    cmd: python3 src/features/build_features.py
+    deps:
+      - src/features/build_features.py
+      - data/raw/GermanCredit.csv
+    outs:
+      - data/processed/GermanCredit_processed.csv
+
+  train:
+    cmd: python3 src/models/train_model.py
+    deps:
+      - src/models/train_model.py
+      - data/processed/GermanCredit_processed.csv
+    outs:
+      - models/random_forest.joblib
+
+  evaluate:
+    cmd: python3 src/models/evaluate_model.py
+    deps:
+      - models/random_forest.joblib
+      - data/processed/GermanCredit_processed.csv

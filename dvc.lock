@@ -1,0 +1,61 @@
+schema: '2.0'
+stages:
+  download:
+    cmd: python3 src/data/download.py
+    outs:
+    - path: data/raw/GermanCredit.csv
+      hash: md5
+      md5: bf800be85f0c8a6da604a04c097850cb
+      size: 224877
+      isexec: true
+  preprocess:
+    cmd: python3 src/features/build_features.py
+    deps:
+    - path: data/raw/GermanCredit.csv
+      hash: md5
+      md5: bf800be85f0c8a6da604a04c097850cb
+      size: 224877
+      isexec: true
+    - path: src/features/build_features.py
+      hash: md5
+      md5: 82901f40bbbd360407c126724494916a
+      size: 571
+      isexec: true
+    outs:
+    - path: data/processed/GermanCredit_processed.csv
+      hash: md5
+      md5: c5196396d231d621b92d5c5ea45d5c69
+      size: 257810
+      isexec: true
+  train:
+    cmd: python3 src/models/train_model.py
+    deps:
+    - path: data/processed/GermanCredit_processed.csv
+      hash: md5
+      md5: c5196396d231d621b92d5c5ea45d5c69
+      size: 257810
+      isexec: true
+    - path: src/models/train_model.py
+      hash: md5
+      md5: e2d271d9f5682eba373489d43df575f1
+      size: 1205
+      isexec: true
+    outs:
+    - path: models/random_forest.joblib
+      hash: md5
+      md5: dd0b736c124e2d99e39925e5883d0437
+      size: 422921
+      isexec: true
+  evaluate:
+    cmd: python3 src/models/evaluate_model.py
+    deps:
+    - path: data/processed/GermanCredit_processed.csv
+      hash: md5
+      md5: c5196396d231d621b92d5c5ea45d5c69
+      size: 257810
+      isexec: true
+    - path: models/random_forest.joblib
+      hash: md5
+      md5: dd0b736c124e2d99e39925e5883d0437
+      size: 422921
+      isexec: true
