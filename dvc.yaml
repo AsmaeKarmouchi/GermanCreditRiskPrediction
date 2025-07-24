@@ -1,27 +1,36 @@
 stages:
   download:
-    cmd: python3 src/data/download.py
+    cmd: python src/data/download.py
     outs:
       - data/raw/GermanCredit.csv
 
-  preprocess:
-    cmd: python3 src/features/build_features.py
+  advanced_preprocess:
+    cmd: python src/features/advanced_features.py
     deps:
-      - src/features/build_features.py
+      - src/features/advanced_features.py
       - data/raw/GermanCredit.csv
+      - params.yaml
     outs:
       - data/processed/GermanCredit_processed.csv
+      - data/processed/preprocessor.joblib
 
-  train:
-    cmd: python3 src/models/train_model.py
+  train_advanced:
+    cmd: python src/models/advanced_training.py
     deps:
-      - src/models/train_model.py
+      - src/models/advanced_training.py
       - data/processed/GermanCredit_processed.csv
+      - params.yaml
     outs:
-      - models/random_forest.joblib
+      - models/best_model.joblib
+    metrics:
+      - reports/metrics/model_comparison_*.json
 
-  evaluate:
-    cmd: python3 src/models/evaluate_model.py
+  evaluate_advanced:
+    cmd: python src/models/advanced_evaluation.py
     deps:
-      - models/random_forest.joblib
+      - models/best_model.joblib
       - data/processed/GermanCredit_processed.csv
+    metrics:
+      - reports/metrics/evaluation_*.json
+    plots:
+      - reports/figures/evaluation_*.png

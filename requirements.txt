@@ -7,3 +7,15 @@ jupyter
 dvc
 joblib
 pyyaml
+mlflow
+xgboost
+lightgbm
+optuna
+shap
+plotly
+dash
+streamlit
+flask
+pytest
+black
+flake8
